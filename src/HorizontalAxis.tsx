@@ -23,6 +23,7 @@ type Props = {
       visible?: boolean
       label?: Label
       formatter?: (value: number) => string
+      centered?: boolean
     }
     grid?: {
       visible?: boolean
@@ -31,6 +32,7 @@ type Props = {
   }
   tickValues?: number[]
   tickCount?: number
+  labelValues?: string[]
   includeOriginTick?: boolean
 }
 
@@ -39,6 +41,7 @@ const HorizontalAxis: React.FC<Props> = (props) => {
     theme: { axis, ticks, grid, labels },
     tickValues,
     tickCount,
+    labelValues,
     includeOriginTick,
   } = deepmerge(defaultProps, props)
 
@@ -47,6 +50,9 @@ const HorizontalAxis: React.FC<Props> = (props) => {
   if (!dimensions) {
     return null
   }
+
+  console.log(dimensions)
+  console.log(viewportDomain)
 
   // fround is used because of potential float comparison errors, see https://github.com/N1ghtly/react-native-responsive-linechart/issues/53
   const finalTickValues = calculateTickValues(tickValues, tickCount, domain.x, includeOriginTick).filter(
@@ -68,7 +74,9 @@ const HorizontalAxis: React.FC<Props> = (props) => {
           strokeDasharray={axis.stroke.dashArray.length > 0 ? axis.stroke.dashArray.join(',') : undefined}
         />
       )}
-      {finalTickValues.map((value) => {
+      {finalTickValues.map((value, index) => {
+        console.log(value)
+
         return (
           <React.Fragment key={value}>
             {/* Render Grid */}
@@ -113,7 +121,7 @@ const HorizontalAxis: React.FC<Props> = (props) => {
                   textAnchor={labels.label.textAnchor}
                   rotation={labels.label.rotation}
                 >
-                  {labels.formatter(value)}
+                  {(labelValues && labelValues[index]) ?? labels.formatter(value)}
                 </Text>
               </G>
             )}

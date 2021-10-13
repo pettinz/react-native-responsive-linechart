@@ -31,6 +31,7 @@ type Props = {
   }
   tickValues?: number[]
   tickCount?: number
+  labelValues?: string[]
   includeOriginTick?: boolean
 }
 
@@ -39,6 +40,7 @@ const VerticalAxis: React.FC<Props> = (props) => {
     theme: { axis, ticks, grid, labels },
     tickValues,
     tickCount,
+    labelValues,
     includeOriginTick,
   } = deepmerge(defaultProps, props)
 
@@ -68,7 +70,7 @@ const VerticalAxis: React.FC<Props> = (props) => {
           strokeDasharray={axis.stroke.dashArray.length > 0 ? axis.stroke.dashArray.join(',') : undefined}
         />
       )}
-      {finalTickValues.map((value) => {
+      {finalTickValues.map((value, index) => {
         return (
           <React.Fragment key={value}>
             {/* Render Grid */}
@@ -108,7 +110,7 @@ const VerticalAxis: React.FC<Props> = (props) => {
                   textAnchor={labels.label.textAnchor}
                   rotation={labels.label.rotation}
                 >
-                  {labels.formatter(value)}
+                  {(labelValues && labelValues[index]) ?? labels.formatter(value)}
                 </Text>
               </G>
             )}
