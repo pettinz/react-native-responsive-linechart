@@ -26,6 +26,7 @@ export type Shape = {
   opacity?: number
   radius?: number
   border?: Stroke
+  rotation?: number
 }
 
 export type Gradient = { from?: { color?: string; opacity?: number }; to?: { color?: string; opacity?: number } }

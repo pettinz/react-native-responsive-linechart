@@ -153,6 +153,7 @@ const Line = React.forwardRef<LineHandle, Props>(function Line(props, ref) {
               strokeWidth={shape.border.width}
               strokeOpacity={shape.border.opacity}
               strokeDasharray={shape.border.dashArray}
+              transform={{ rotation: shape.rotation, originX: p.x + shape.dx, originY: p.y + shape.dy }}
             />
           )
         })}
@@ -188,6 +189,7 @@ const defaultProps = {
           opacity: 1,
           dashArray: [],
         },
+        rotation: 0,
       },
       selected: {},
     },
