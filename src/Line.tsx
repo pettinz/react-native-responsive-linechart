@@ -30,7 +30,8 @@ type Props = {
   /** Defines a period in ms after which the tooltip should hide */
   hideTooltipAfter?: number
   /** Initial index for the tooltip. The tooltip will be immediately visible at this index on first render, without requiring user interaction. */
-  initialTooltipIndex?: number
+  tooltipIndex: number | undefined
+  setTooltipIndex: (n: number | undefined) => void
   /** Data for the chart. Overrides optional data provided in `<Chart />`. */
   data?: ChartDataPoint[]
 }
@@ -41,7 +42,6 @@ export type LineHandle = {
 
 const Line = React.forwardRef<LineHandle, Props>(function Line(props, ref) {
   const { data: contextData, dimensions, viewportDomain, viewportOrigin, lastTouch } = React.useContext(ChartContext)
-  const [tooltipIndex, setTooltipIndex] = React.useState<number | undefined>(props.initialTooltipIndex)
 
   const {
     theme: { stroke, scatter },
@@ -53,6 +53,8 @@ const Line = React.forwardRef<LineHandle, Props>(function Line(props, ref) {
     hideTooltipOnDragEnd,
     hideTooltipAfter,
     onTooltipSelectEnd = () => {},
+    tooltipIndex,
+    setTooltipIndex,
   } = deepmerge(defaultProps, props)
 
   if (!dimensions) {
@@ -67,12 +69,6 @@ const Line = React.forwardRef<LineHandle, Props>(function Line(props, ref) {
       setTooltipIndex(index)
     },
   }))
-
-  React.useEffect(() => {
-    if (props.initialTooltipIndex !== undefined && !lastTouch) {
-      setTooltipIndex(props.initialTooltipIndex)
-    }
-  }, [props.initialTooltipIndex])
 
   React.useEffect(() => {
     const scaledPoints = scalePointsToDimensions(data, viewportDomain, dimensions)
