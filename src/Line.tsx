@@ -30,14 +30,14 @@ type Props = {
   /** Defines a period in ms after which the tooltip should hide */
   hideTooltipAfter?: number
   /** Initial index for the tooltip. The tooltip will be immediately visible at this index on first render, without requiring user interaction. */
-  tooltipIndex: number | undefined
-  setTooltipIndex: (n: number | undefined) => void
+  tooltipIndex?: number
+  setTooltipIndex?: (n: number | undefined) => void
   /** Data for the chart. Overrides optional data provided in `<Chart />`. */
   data?: ChartDataPoint[]
 }
 
 export type LineHandle = {
-  setTooltipIndex: (index: number | undefined) => void
+  setTooltipIndex?: (index: number | undefined) => void
 }
 
 const Line = React.forwardRef<LineHandle, Props>(function Line(props, ref) {
@@ -77,7 +77,7 @@ const Line = React.forwardRef<LineHandle, Props>(function Line(props, ref) {
     let tooltipTimer: NodeJS.Timeout
 
     if (lastTouch?.type === 'panEnd') {
-      if (hideTooltipOnDragEnd && Math.abs(lastTouch?.translation?.x) > 5) {
+      if (setTooltipIndex !== undefined && hideTooltipOnDragEnd && Math.abs(lastTouch?.translation?.x) > 5) {
         setTooltipIndex(undefined)
       }
       // Hide tooltip after specified time
@@ -92,10 +92,10 @@ const Line = React.forwardRef<LineHandle, Props>(function Line(props, ref) {
       }
       // Necessary for Android because pan is called even when finger is not actually panning.
       // If we don't check for this, we have interference with the tap handler
-      if (lastTouch?.type !== 'pan' || Math.abs(lastTouch?.translation?.x) > 5) {
+      if (setTooltipIndex !== undefined && (lastTouch?.type !== 'pan' || Math.abs(lastTouch?.translation?.x)) > 5) {
         setTooltipIndex(newIndex)
       }
-      if (typeof onTooltipSelect === 'function' && typeof newIndex === 'number' && data.length > newIndex) {
+      if (setTooltipIndex !== undefined && typeof onTooltipSelect === 'function' && typeof newIndex === 'number' && data.length > newIndex) {
         onTooltipSelect(data[newIndex], newIndex)
       }
     } else if (newIndex === tooltipIndex && lastTouch?.type === 'tap') {
