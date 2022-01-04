@@ -71,7 +71,6 @@
     "docs:deploy": "./deploy_docs.sh",
     "prepublish": "yarn tsc",
     "release": "yarn np",
-    "test": "yarn jest",
-    "postinstall": "tsc"
+    "test": "yarn jest"
   }
 }
